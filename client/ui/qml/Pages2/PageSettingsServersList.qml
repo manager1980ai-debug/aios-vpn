@@ -1,108 +1,48 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
-import SortFilterProxyModel 0.2
-
 import PageEnum 1.0
-import ContainerProps 1.0
-import Style 1.0
-
-import "./"
 import "../Controls2"
-import "../Controls2/TextTypes"
-import "../Config"
 import "../Components"
-
 PageType {
-    id: root
-
+ id: root
+ readonly property bool hasServer: ServersUiController.defaultServerId !== ""
+ function openServer() {
+  if (!hasServer) { PageController.goToPage(PageEnum.PageSetupWizardConfigSource); return }
+  ServersUiController.setProcessedServerId(ServersUiController.defaultServerId)
+  if (ServersUiController.isDefaultServerFromApi) {
+   PageController.showBusyIndicator(true)
+   var ok = SubscriptionUiController.getAccountInfo(ServersUiController.defaultServerId, false)
+   PageController.showBusyIndicator(false)
+   if (ok) PageController.goToPage(PageEnum.PageSettingsApiServerInfo)
+  } else PageController.goToPage(PageEnum.PageSettingsServerInfo)
+ }
+ Rectangle { anchors.fill: parent; color: "#060B0E" }
+ ScrollView {
+  anchors.fill: parent; contentWidth: availableWidth; clip: true
+  ColumnLayout {
+   width: root.width; spacing: 16
+   Text { text: qsTr("Мой сервер"); color: "#F3F4F6"; font.pixelSize: 24; font.weight: Font.Medium; Layout.margins: 22; Layout.topMargin: 28 + PageController.safeAreaTopMargin }
+   AiosAction {
+    Layout.fillWidth: true; Layout.leftMargin: 22; Layout.rightMargin: 22
+    text: root.hasServer ? (ServersUiController.defaultServerName || qsTr("Личный сервер")) : qsTr("Добавить мой сервер")
+    subtitle: root.hasServer ? (ConnectionController.isConnected ? qsTr("Подключено · соединение защищено") : qsTr("Готов к подключению")) : qsTr("Импортируйте ваш ключ или конфигурацию")
+    symbol: "server"; onClicked: root.openServer()
+   }
+   Rectangle {
+    Layout.fillWidth: true; Layout.leftMargin: 22; Layout.rightMargin: 22; Layout.preferredHeight: serverNotes.implicitHeight + 40
+    radius: 16; color: "#0E171C"; border.color: "#283136"
     ColumnLayout {
-        id: header
-
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        anchors.topMargin: 20 + PageController.safeAreaTopMargin
-
-        BackButtonType {
-            id: backButton
-        }
-
-        BaseHeaderType {
-            Layout.fillWidth: true
-            Layout.leftMargin: 16
-            Layout.rightMargin: 16
-
-            headerText: qsTr("Servers")
-        }
+     id: serverNotes; anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top; anchors.margins: 20; spacing: 14
+     AiosIcon { name: "lock" }
+     Text { text: qsTr("Только ваш сервер"); color: "#F2D49C"; font.pixelSize: 18 }
+     Text { Layout.fillWidth: true; text: qsTr("Личное подключение без выбора стран. Ключ хранится на вашем устройстве и используется для подключения к вашему VPN."); color: "#A4AEBE"; font.pixelSize: 13; wrapMode: Text.WordWrap; lineHeight: 1.35 }
     }
-
-    // AIOS: единственный сервер — карточка «Мой сервер»
-    Rectangle {
-        id: aiosServersCard
-        objectName: "aiosServersCard"
-
-        anchors.top: header.bottom
-        anchors.topMargin: 24
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 16
-
-        implicitHeight: 96
-        radius: 16
-
-        color: '#16161A'
-        border.color: '#2A2A2F'
-        border.width: 1
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 16
-            spacing: 12
-
-            Rectangle {
-                width: 40; height: 40; radius: 12
-                color: '#D4AF37'
-                Text {
-                    anchors.centerIn: parent
-                    text: "\u25B2"
-                    color: '#0B0B0D'
-                    font.pixelSize: 18
-                    font.bold: true
-                }
-            }
-            ColumnLayout {
-                spacing: 2
-                Layout.fillWidth: true
-                Text {
-                    text: ServersUiController.defaultServerName !== "" ? ServersUiController.defaultServerName : qsTr("Мой сервер")
-                    color: '#FFFFFF'
-                    font.pixelSize: 15
-                    font.weight: Font.Bold
-                    elide: Text.ElideRight
-                    Layout.fillWidth: true
-                }
-                Text {
-                    text: ConnectionController.isConnected ? qsTr("Подключено") : qsTr("Доступен")
-                    color: ConnectionController.isConnected ? '#34D399' : '#8E8E93'
-                    font.pixelSize: 12
-                }
-            }
-            Text {
-                text: "AWG"
-                color: '#8E8E93'
-                font.pixelSize: 12
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                ServersUiController.setProcessedServerId(ServersUiController.defaultServerId)
-                PageController.goToPage(PageEnum.PageSettingsServerInfo)
-            }
-        }
-    }
+   }
+   AiosGoldButton {
+    Layout.fillWidth: true; Layout.margins: 22; text: root.hasServer ? qsTr("Настроить сервер") : qsTr("Добавить ключ")
+    onClicked: root.openServer()
+   }
+  }
+ }
 }

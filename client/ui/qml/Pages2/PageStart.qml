@@ -319,111 +319,42 @@ PageType {
     TabBar {
         id: tabBar
         objectName: "tabBar"
-
-        anchors.right: parent.right
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
-
-        // Also adjust TabBar position when keyboard appears (Android 14+ workaround)
         anchors.bottomMargin: PageController.imeHeight
-
         topPadding: 8
         bottomPadding: 8 + PageController.safeAreaBottomMargin
-        leftPadding: 96
-        rightPadding: 96
-
-        height: visible ? homeTabButton.implicitHeight + tabBar.topPadding + tabBar.bottomPadding : 0
-
+        height: visible ? 66 + PageController.safeAreaBottomMargin : 0
         enabled: !root.isControlsDisabled && !root.isTabBarDisabled
-
-        background: Shape {
-            objectName: "backgroundShape"
-
-            width: parent.width
-            height: parent.height
-
-            ShapePath {
-                startX: 0
-                startY: 0
-
-                PathLine { x: width; y: 0 }
-                PathLine { x: width; y: tabBar.height - 1 }
-                PathLine { x: 0; y: tabBar.height - 1 }
-                PathLine { x: 0; y: 0 }
-
-                strokeWidth: 1
-                strokeColor: AmneziaStyle.color.slateGray
-                fillColor: AmneziaStyle.color.onyxBlack
-            }
-        }
-
+        background: Rectangle { color: "#0B1115"; Rectangle { width: parent.width; height: 1; color: "#273036" } }
         TabImageButtonType {
             id: homeTabButton
-            objectName: "homeTabButton"
-
+            text: qsTr("Главная")
             isSelected: tabBar.currentIndex === 0
             image: "qrc:/images/controls/home.svg"
-            clickedFunc: function () {
+            clickedFunc: function() {
                 tabBarStackView.goToTabBarPage(PageEnum.PageHome)
                 ServersUiController.setProcessedServerId(ServersUiController.defaultServerId)
                 tabBar.currentIndex = 0
             }
         }
-
         TabImageButtonType {
-            id: shareTabButton
-            objectName: "shareTabButton"
-
-            Connections {
-                target: ServersModel
-
-                function onModelReset() {
-                    if (!SettingsController.isOnTv()) {
-                        var hasServerWithWriteAccess = ServersUiController.hasServerWithWriteAccess()
-                        shareTabButton.visible = hasServerWithWriteAccess
-                        shareTabButton.width = hasServerWithWriteAccess ? undefined : 0
-                    }
-                }
-            }
-
-            visible: !SettingsController.isOnTv() && ServersUiController.hasServerWithWriteAccess()
-            width: !SettingsController.isOnTv() && ServersUiController.hasServerWithWriteAccess() ? undefined : 0
-
+            text: qsTr("Мой сервер")
             isSelected: tabBar.currentIndex === 1
-            image: "qrc:/images/controls/share-2.svg"
-            clickedFunc: function () {
-                tabBarStackView.goToTabBarPage(PageEnum.PageShare)
+            image: "qrc:/images/controls/server.svg"
+            clickedFunc: function() {
+                tabBarStackView.goToTabBarPage(PageEnum.PageSettingsServersList)
                 tabBar.currentIndex = 1
             }
         }
-
         TabImageButtonType {
-            id: settingsTabButton
-            objectName: "settingsTabButton"
-
+            text: qsTr("Профиль")
             isSelected: tabBar.currentIndex === 2
-            image: (ServersUiController.hasServersFromGatewayApi && NewsModel.hasUnread && SettingsController.isNewsNotificationsEnabled()) ? "qrc:/images/controls/settings-news.svg" : "qrc:/images/controls/settings.svg"
-            Binding {
-                target: settingsTabButton
-                property: "defaultColor"
-                value: "transparent"
-                when: (ServersUiController.hasServersFromGatewayApi && NewsModel.hasUnread)
-            }
-            clickedFunc: function () {
+            image: "qrc:/images/controls/monitor.svg"
+            clickedFunc: function() {
                 tabBarStackView.goToTabBarPage(PageEnum.PageSettings)
                 tabBar.currentIndex = 2
-            }
-        }
-
-        TabImageButtonType {
-            id: plusTabButton
-            objectName: "plusTabButton"
-
-            isSelected: tabBar.currentIndex === 3
-            image: "qrc:/images/controls/plus.svg"
-            clickedFunc: function () {
-                tabBarStackView.goToTabBarPage(PageEnum.PageSetupWizardConfigSource)
-                tabBar.currentIndex = 3
             }
         }
     }
