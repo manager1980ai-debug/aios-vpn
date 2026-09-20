@@ -19,6 +19,12 @@ ConnectionUiController::ConnectionUiController(ConnectionController* connectionC
       m_serversController(serversController)
 {
     connect(m_connectionController, &ConnectionController::connectionStateChanged, this, &ConnectionUiController::onConnectionStateChanged);
+    connect(m_connectionController, &ConnectionController::bytesChanged, this,
+            [this](quint64 received, quint64 sent) {
+                m_receivedBytes += received;
+                m_sentBytes += sent;
+                emit trafficChanged();
+            });
 
     connect(this, &ConnectionUiController::connectButtonClicked, this, &ConnectionUiController::toggleConnection, Qt::QueuedConnection);
 
@@ -120,6 +126,10 @@ QString ConnectionUiController::connectionStateText() const
 {
     return m_connectionStateText;
 }
+
+quint64 ConnectionUiController::receivedBytes() const { return m_receivedBytes; }
+
+quint64 ConnectionUiController::sentBytes() const { return m_sentBytes; }
 
 void ConnectionUiController::toggleConnection()
 {
