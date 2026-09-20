@@ -47,6 +47,12 @@ TabButton {
 
     hoverEnabled: true
 
+    display: AbstractButton.TextUnderIcon
+    font.pixelSize: 10
+    palette.buttonText: isSelected ? "#F4CC87" : "#8794A5"
+    icon.width: 22
+    icon.height: 22
+    spacing: 5
     icon.source: image
     icon.color: isSelected ? selectedColor : defaultColor
 
