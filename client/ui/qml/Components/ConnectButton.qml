@@ -1,190 +1,45 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 import QtQuick.Shapes
 import Qt5Compat.GraphicalEffects
-
-import ConnectionState 1.0
-import PageEnum 1.0
-import Style 1.0
-
 Button {
-    id: root
-
-    property string defaultButtonColor: '#D4AF37' // AIOS: золотое кольцо офлайн
-    property string progressButtonColor: '#8a6f1f' // AIOS: приглушённое золото в процессе
-    property string connectedButtonColor: '#34D399' // AIOS: зелёное свечение подключено
-    property bool buttonActiveFocus: activeFocus && (Qt.platform.os !== "android" || SettingsController.isOnTv())
-
-    property bool isFocusable: true
-    
-    Keys.onTabPressed: {
-        FocusController.nextKeyTabItem()
-    }
-
-    Keys.onBacktabPressed: {
-        FocusController.previousKeyTabItem()
-    }
-
-    Keys.onUpPressed: {
-        FocusController.nextKeyUpItem()
-    }
-    
-    Keys.onDownPressed: {
-        FocusController.nextKeyDownItem()
-    }
-    
-    Keys.onLeftPressed: {
-        FocusController.nextKeyLeftItem()
-    }
-
-    Keys.onRightPressed: {
-        FocusController.nextKeyRightItem()
-    }
-        
-    implicitWidth: 190
-    implicitHeight: 190
-
-    text: ConnectionController.connectionStateText
-
-    Connections {
-        target: ConnectionController
-
-        function onPreparingConfig() {
-            PageController.showNotificationMessage(qsTr("Unable to disconnect during configuration preparation"))
-        }
-    }
-
-//    enabled: !ConnectionController.isConnectionInProgress
-
-    background: Item {
-        implicitWidth: parent.width
-        implicitHeight: parent.height
-        transformOrigin: Item.Center
-
-        Shape {
-            id: backgroundCircle
-            width: parent.implicitWidth
-            height: parent.implicitHeight
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            layer.enabled: true
-            layer.samples: 4
-            layer.smooth: true
-            layer.effect: DropShadow {
-                anchors.fill: backgroundCircle
-                horizontalOffset: 0
-                verticalOffset: 0
-                radius: 10
-                samples: 25
-                color: root.buttonActiveFocus ? '#3a3a3e' : AmneziaStyle.color.goldenApricot
-                source: backgroundCircle
-            }
-
-            ShapePath {
-                fillColor: AmneziaStyle.color.transparent
-                strokeColor: AmneziaStyle.color.paleGray
-                strokeWidth: root.buttonActiveFocus ? 1 : 0
-                capStyle: ShapePath.RoundCap
-
-                PathAngleArc {
-                    centerX: backgroundCircle.width / 2
-                    centerY: backgroundCircle.height / 2
-                    radiusX: 94
-                    radiusY: 94
-                    startAngle: 0
-                    sweepAngle: 360
-                }
-            }
-
-            ShapePath {
-                fillColor: AmneziaStyle.color.transparent
-                strokeColor: {
-                    if (ConnectionController.isConnectionInProgress) {
-                        return '#2E2E33' // AIOS: тёмное кольцо в процессе
-                    } else if (ConnectionController.isConnected) {
-                        return connectedButtonColor
-                    } else {
-                        return defaultButtonColor
-                    }
-                }
-                strokeWidth: root.buttonActiveFocus ? 2 : 3
-                capStyle: ShapePath.RoundCap
-
-                PathAngleArc {
-                    centerX: backgroundCircle.width / 2
-                    centerY: backgroundCircle.height / 2
-                    radiusX: 93 - (root.buttonActiveFocus ? 2 : 0)
-                    radiusY: 93 - (root.buttonActiveFocus ? 2 : 0)
-                    startAngle: 0
-                    sweepAngle: 360
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-
-                cursorShape: Qt.PointingHandCursor
-                enabled: false
-            }
-        }
-
-        Shape {
-            id: shape
-            width: parent.implicitWidth
-            height: parent.implicitHeight
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            layer.enabled: true
-            layer.samples: 4
-
-            visible: ConnectionController.isConnectionInProgress
-
-            ShapePath {
-                fillColor: AmneziaStyle.color.transparent
-                strokeColor: AmneziaStyle.color.paleGray
-                strokeWidth: 3
-                capStyle: ShapePath.RoundCap
-
-                PathAngleArc {
-                    centerX: shape.width / 2
-                    centerY: shape.height / 2
-                    radiusX: 93
-                    radiusY: 93
-                    startAngle: 245
-                    sweepAngle: -180
-                }
-            }
-
-            RotationAnimator {
-                target: shape
-                running: ConnectionController.isConnectionInProgress
-                from: 0
-                to: 360
-                loops: Animation.Infinite
-                duration: 1000
-            }
-        }
-    }
-
-    contentItem: Text {
-        height: 24
-
-        font.family: "PT Root UI VF"
-        font.weight: 700
-        font.pixelSize: 20
-
-        color: ConnectionController.isConnected ? connectedButtonColor : defaultButtonColor
-        text: root.text
-
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
-
-    onClicked: {
-        ConnectionController.connectButtonClicked()
-    }
-
-    Keys.onEnterPressed: this.clicked()
-    Keys.onReturnPressed: this.clicked()
+ id: root
+ property bool isFocusable: true
+ readonly property color ringColor: ConnectionController.isConnected ? "#5CE68A" : "#F4CC87"
+ implicitWidth: 190; implicitHeight: 190
+ Accessible.name: ConnectionController.isConnected ? qsTr("Отключить VPN") : qsTr("Подключить VPN")
+ background: Item {
+  Rectangle { id: halo; anchors.fill: parent; radius: width / 2; color: ConnectionController.isConnected ? "#0D241A" : "#272015"; border.color: root.ringColor; opacity: 0.7 }
+  Glow { anchors.fill: halo; source: halo; radius: 22; samples: 45; color: root.ringColor; opacity: 0.22 }
+  Rectangle {
+   anchors.fill: parent; anchors.margins: 12; radius: width / 2
+   border.width: root.activeFocus ? 4 : 3; border.color: root.ringColor
+   gradient: Gradient {
+    GradientStop { position: 0; color: ConnectionController.isConnected ? "#143524" : "#342B1E" }
+    GradientStop { position: 0.5; color: "#080E10" }
+    GradientStop { position: 1; color: "#0C1517" }
+   }
+   scale: root.down ? 0.96 : 1
+   Behavior on scale { NumberAnimation { duration: 120 } }
+  }
+  Shape {
+   anchors.fill: parent; visible: ConnectionController.isConnectionInProgress
+   ShapePath {
+    fillColor: "transparent"; strokeColor: "#FFEDCA"; strokeWidth: 4; capStyle: ShapePath.RoundCap
+    PathAngleArc { centerX: root.width / 2; centerY: root.height / 2; radiusX: root.width / 2 - 4; radiusY: root.height / 2 - 4; startAngle: 0; sweepAngle: 85 }
+   }
+   RotationAnimator on rotation { from: 0; to: 360; duration: 1300; loops: Animation.Infinite; running: ConnectionController.isConnectionInProgress }
+  }
+ }
+ contentItem: Item {
+  Shape {
+   anchors.centerIn: parent; width: 42; height: 42
+   ShapePath { strokeColor: root.ringColor; strokeWidth: 3; fillColor: "transparent"; capStyle: ShapePath.RoundCap; PathAngleArc { centerX: 21; centerY: 23; radiusX: 16; radiusY: 16; startAngle: -55; sweepAngle: 290 } }
+   ShapePath { strokeColor: root.ringColor; strokeWidth: 3; capStyle: ShapePath.RoundCap; startX: 21; startY: 3; PathLine { x: 21; y: 22 } }
+  }
+ }
+ Connections { target: ConnectionController; function onPreparingConfig() { PageController.showNotificationMessage(qsTr("Подготавливаем подключение…")) } }
+ onClicked: ConnectionController.connectButtonClicked()
+ Keys.onReturnPressed: clicked()
+ Keys.onEnterPressed: clicked()
 }
