@@ -4,6 +4,7 @@
     </qresource>
     <qresource prefix="/images">
         <file>aios_logo.png</file>
+        <file>aios_mark.svg</file>
         <file>aios_planet.jpg</file>
         <file>amneziaBigLogo.png</file>
         <file>AmneziaVPN.png</file>

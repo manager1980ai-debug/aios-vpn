@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100">
+ <defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B2"/><stop offset="0.42" stop-color="#F6BF45"/><stop offset="1" stop-color="#B56A16"/></linearGradient><filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+ <path filter="url(#glow)" fill="url(#gold)" d="M60 4 113 91 79 72 60 39 41 72 7 91Z"/>
+ <path fill="#FFF0AE" d="M60 4v35l19 33 10 6-29-47Z" opacity=".72"/>
+</svg>
