@@ -35,6 +35,7 @@ PageType {
    }
    Repeater {
     model: [{title:qsTr("Мой сервер"),detail:qsTr("Ваше личное подключение"),icon:"server",page:PageEnum.PageSettingsServersList},
+     {title:qsTr("Тариф и подписка"),detail:qsTr("Личный сервер · до 5 устройств"),icon:"tag",page:PageEnum.PageSettingsServerInfo},
      {title:qsTr("Устройства"),detail:qsTr("Управление доступом"),icon:"monitor",page:PageEnum.PageAiosDevices},
      {title:qsTr("Безопасность"),detail:qsTr("VPN и параметры подключения"),icon:"lock",page:PageEnum.PageSettingsConnection},
      {title:qsTr("Настройки"),detail:qsTr("Язык, запуск и поведение приложения"),icon:"settings",page:PageEnum.PageSettingsApplication},

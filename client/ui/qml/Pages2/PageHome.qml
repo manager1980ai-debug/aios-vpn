@@ -6,6 +6,29 @@ import "../Controls2"
 import "../Components"
 PageType {
  id: root
+ property real downloadRate: 0
+ property real uploadRate: 0
+ property real previousReceived: 0
+ property real previousSent: 0
+
+ function formatBytes(value) {
+  if (value < 1024) return value.toFixed(0) + " B"
+  if (value < 1024 * 1024) return (value / 1024).toFixed(1) + " KB"
+  if (value < 1024 * 1024 * 1024) return (value / (1024 * 1024)).toFixed(1) + " MB"
+  return (value / (1024 * 1024 * 1024)).toFixed(2) + " GB"
+ }
+ function formatRate(value) { return value < 0.1 ? "0 Мбит/с" : value.toFixed(1) + " Мбит/с" }
+ Timer {
+  interval: 1000; repeat: true; running: true
+  onTriggered: {
+   var rx = ConnectionController.receivedBytes
+   var tx = ConnectionController.sentBytes
+   root.downloadRate = Math.max(0, (rx - root.previousReceived) * 8 / 1000000)
+   root.uploadRate = Math.max(0, (tx - root.previousSent) * 8 / 1000000)
+   root.previousReceived = rx
+   root.previousSent = tx
+  }
+ }
  Rectangle { anchors.fill: parent; color: "#060B0E" }
  ScrollView {
   anchors.fill: parent; contentWidth: availableWidth; clip: true
@@ -36,6 +59,19 @@ PageType {
     Layout.fillWidth: true; Layout.margins: 22; Layout.topMargin: 12; Layout.bottomMargin: 0
     text: qsTr("Мой сервер"); subtitle: ServersUiController.defaultServerName || qsTr("Добавьте ключ подключения"); symbol: "server"
     onClicked: PageController.goToPage(PageEnum.PageSettingsServersList)
+   }
+   Rectangle {
+    Layout.fillWidth: true; Layout.margins: 22; Layout.topMargin: 0; implicitHeight: 86; radius: 16
+    color: "#0E171C"; border.color: "#283136"
+    ColumnLayout {
+     anchors.fill: parent; anchors.margins: 14; spacing: 8
+     Text { text: qsTr("Статистика соединения"); color: "#F0D49A"; font.pixelSize: 12; font.weight: Font.Medium }
+     RowLayout {
+      Layout.fillWidth: true; spacing: 8
+      Text { Layout.fillWidth: true; text: qsTr("Загрузка") + "  " + root.formatRate(root.downloadRate) + "\n" + qsTr("Получено") + "  " + root.formatBytes(ConnectionController.receivedBytes); color: "#B9C4D2"; font.pixelSize: 10 }
+      Text { Layout.fillWidth: true; text: qsTr("Отдача") + "  " + root.formatRate(root.uploadRate) + "\n" + qsTr("Отправлено") + "  " + root.formatBytes(ConnectionController.sentBytes); color: "#B9C4D2"; font.pixelSize: 10; horizontalAlignment: Text.AlignRight }
+     }
+    }
    }
    GridLayout {
     Layout.fillWidth: true; Layout.leftMargin: 22; Layout.rightMargin: 22; columns: 2; columnSpacing: 12; rowSpacing: 12

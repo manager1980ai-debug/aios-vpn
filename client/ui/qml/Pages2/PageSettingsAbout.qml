@@ -54,7 +54,7 @@ PageType {
 
             Image {
                 id: image
-                source: "qrc:/images/aios_logo.png"
+                source: "qrc:/images/aios_mark.svg"
 
                 Layout.alignment: Qt.AlignCenter
                 Layout.topMargin: 24

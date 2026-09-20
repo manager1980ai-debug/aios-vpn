@@ -12,7 +12,7 @@ PageType {
   ColumnLayout {
    width: root.width; spacing: 0
    Image {
-    source: "qrc:/images/aios_logo.png"; sourceClipRect: Qt.rect(0,120,640,400); fillMode: Image.PreserveAspectFit
+    source: "qrc:/images/aios_mark.svg"; fillMode: Image.PreserveAspectFit
     Layout.alignment: Qt.AlignHCenter; Layout.preferredWidth: 102; Layout.preferredHeight: 78; Layout.topMargin: 22 + PageController.safeAreaTopMargin
    }
    Text { text: "AIOS"; color: "#F2CC86"; font.pixelSize: 42; font.letterSpacing: 9; Layout.alignment: Qt.AlignHCenter; Layout.topMargin: 12 }
