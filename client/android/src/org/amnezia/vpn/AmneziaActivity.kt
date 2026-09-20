@@ -114,10 +114,8 @@ class AmneziaActivity : QtActivity() {
                     }
 
                     ServiceEvent.STATUS -> {
-                        if (isWaitingStatus) {
-                            isWaitingStatus = false
-                            msg.data?.getStatus()?.let { QtAndroidController.onStatus(it) }
-                        }
+                        isWaitingStatus = false
+                        msg.data?.getStatus()?.let { QtAndroidController.onStatus(it) }
                     }
 
                     ServiceEvent.STATISTICS_UPDATE -> {
@@ -373,6 +371,11 @@ class AmneziaActivity : QtActivity() {
         Log.d(TAG, "Resume Amnezia activity")
         if (qtInitialized.isCompleted) {
             QtAndroidController.onActivityResumed()
+        }
+        // Query the still-running VPN service on every resume. The activity
+        // may have been recreated while the tunnel stayed connected.
+        if (isServiceConnected) {
+            vpnServiceMessenger.send(Action.REQUEST_STATUS, replyTo = activityMessenger)
         }
 
         if (pendingOpenFileUri != null && !openFileDeliveryScheduled) {
