@@ -158,6 +158,10 @@
         <file>Components/AwgTextField.qml</file>
         <file>Pages2/PageSettingsApiSubscriptionKey.qml</file>
         <file>Components/SmartScroll.qml</file>
-    </qresource>
+        <file>Components/AiosIcon.qml</file>
+    <file>Components/AiosBrand.qml</file>
+    <file>Components/AiosAction.qml</file>
+    <file>Components/AiosGoldButton.qml</file>
+</qresource>
 </RCC>
 
