@@ -35,25 +35,9 @@ PageType {
      }
     }
    }
-   GridLayout {
-    Layout.fillWidth: true; Layout.leftMargin: 18; Layout.rightMargin: 18; Layout.topMargin: 0; columns: 6; columnSpacing: 4; rowSpacing: 16
-    Repeater {
-     model: [{title: qsTr("Полная\nконфиденциальность"),icon:"lock"}, {title: qsTr("Высокая\nскорость"),icon:"gauge"}, {title: qsTr("Доступ к любому\nконтенту"),icon:"globe-2"}, {title: qsTr("Защита\nваших данных"),icon:"check-circle"}, {title: qsTr("Ваш личный\nсервер"),icon:"server"}]
-     ColumnLayout {
-      required property var modelData
-      required property int index
-      Layout.columnSpan: index < 3 ? 2 : 3; Layout.fillWidth: true; Layout.preferredWidth: 1; spacing: 8
-      Rectangle {
-       Layout.alignment: Qt.AlignHCenter; width: 48; height: 48; radius: 17; color: "#0D1316"; border.color: "#8E6C3E"
-       AiosIcon { anchors.centerIn: parent; name: modelData.icon; width: 25; height: 25 }
-      }
-      Text { Layout.fillWidth: true; text: modelData.title; color: "#CFD6E2"; font.pixelSize: 11; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap }
-     }
-    }
-   }
    AiosGoldButton {
     objectName: "startButton"; text: qsTr("Начать")
-    Layout.fillWidth: true; Layout.leftMargin: 38; Layout.rightMargin: 38; Layout.topMargin: 24; Layout.bottomMargin: 24 + PageController.safeAreaBottomMargin
+    Layout.fillWidth: true; Layout.leftMargin: 38; Layout.rightMargin: 38; Layout.topMargin: 18; Layout.bottomMargin: 18 + PageController.safeAreaBottomMargin
     onClicked: PageController.goToPage(PageEnum.PageSetupWizardConfigSource)
    }
   }
