@@ -29,6 +29,10 @@ AndroidController::AndroidController() : QObject()
                     isWaitingStatus = false;
                     emit initConnectionState(convertState(state));
                 }
+                // The service remains alive while the activity is backgrounded.
+                // Publish every status reply so the UI cannot keep a stale
+                // "disconnected" state after returning to the app.
+                emit connectionStateChanged(convertState(state));
             },
             Qt::QueuedConnection);
 
