@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Style 1.0
+import "../Components"
 
 TabButton {
     id: root
@@ -11,6 +12,7 @@ TabButton {
     property string selectedColor: AmneziaStyle.color.goldenApricot
 
     property string image
+    property string iconName: "home"
 
     property bool isSelected: false
 
@@ -55,6 +57,28 @@ TabButton {
     spacing: 5
     icon.source: image
     icon.color: isSelected ? selectedColor : defaultColor
+
+    contentItem: Column {
+        spacing: 5
+        anchors.fill: parent
+        anchors.topMargin: 6
+        anchors.bottomMargin: 4
+        AiosIcon {
+            name: root.iconName
+            width: 22
+            height: 22
+            anchors.horizontalCenter: parent.horizontalCenter
+            tint: root.isSelected ? root.selectedColor : root.defaultColor
+        }
+        Text {
+            width: parent.width
+            text: root.text
+            color: root.isSelected ? "#F4CC87" : "#D6DEE8"
+            font.pixelSize: 10
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+        }
+    }
 
     background: Rectangle {
         id: background
