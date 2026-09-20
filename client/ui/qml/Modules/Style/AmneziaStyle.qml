@@ -10,7 +10,7 @@ QtObject {
         readonly property color mutedGray: '#878B91'
         readonly property color charcoalGray: '#494B50'
         readonly property color slateGray: '#2C2D30'
-        readonly property color onyxBlack: '#1C1D21'
+        readonly property color onyxBlack: '#0B1115'
         readonly property color midnightBlack: '#0E0E11'
         readonly property color goldenApricot: goldenApricotString // AIOS: золото #D4AF37
         readonly property color benefitsPanelBackground: '#1C1C1E'
@@ -36,10 +36,10 @@ QtObject {
         readonly property color translucentSlateGray: Qt.rgba(85/255, 86/255, 92/255, 0.13)
         readonly property color translucentOnyxBlack: Qt.rgba(28/255, 29/255, 33/255, 0.13)
 
-        readonly property string goldenApricotString: '#D4AF37' // AIOS gold
+        readonly property string goldenApricotString: '#E9BE76' // AIOS gold
 
-        readonly property color backgroundBase: '#0B0B0D' // AIOS: глубокий чёрный
-        readonly property color surfaceBase: '#16161A'
+        readonly property color backgroundBase: '#060B0E' // AIOS: глубокий чёрный
+        readonly property color surfaceBase: '#10181C'
         readonly property color surfaceHovered: '#232327'
         readonly property color surfacePressed: '#2C2D30'
         readonly property color surfaceInverse: '#E4E4E7'
@@ -51,6 +51,6 @@ QtObject {
         readonly property color textStaticWhite: '#FFFFFF'
         readonly property color borderSoft: '#3F3F46'
         readonly property color accentSuccess: '#34D399' // AIOS: зелёный статус
-        readonly property color accentWarning: '#D4AF37' // AIOS: золото вместо жёлтого
+        readonly property color accentWarning: '#E9BE76' // AIOS: золото вместо жёлтого
     }
 }
