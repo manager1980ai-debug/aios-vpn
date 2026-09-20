@@ -377,6 +377,13 @@ class AmneziaActivity : QtActivity() {
         if (isServiceConnected) {
             vpnServiceMessenger.send(Action.REQUEST_STATUS, replyTo = activityMessenger)
         }
+        // Binding can complete just after onResume; request once more after
+        // the service has had a chance to re-register the activity messenger.
+        resumeHandler.postDelayed({
+            if (isActivityResumed && isServiceConnected) {
+                vpnServiceMessenger.send(Action.REQUEST_STATUS, replyTo = activityMessenger)
+            }
+        }, 500L)
 
         if (pendingOpenFileUri != null && !openFileDeliveryScheduled) {
             val uri = pendingOpenFileUri!!
