@@ -9,6 +9,10 @@ on:
       - '**.md'
       - 'docs/**'
 
+# The workflow publishes the generated APK into the fork's rolling release.
+permissions:
+  contents: write
+
 jobs:
   build-android:
     name: 'Build-Android-APK (arm64-v8a)'
