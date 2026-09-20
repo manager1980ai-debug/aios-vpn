@@ -25,7 +25,9 @@ jobs:
       ANDROID_NDK_VERSION: 27.0.11718014
       QT_MIRROR: https://mirrors.ocf.berkeley.edu/qt/
       QT_MODULES: "qtremoteobjects qt5compat qtimageformats qtshadertools"
-      LIBXRAY_RELEASE_URL: https://github.com/${{ github.repository }}/releases/download/libxray/libxray.aar
+      # The fork contains the source and workflow; the large shared build assets
+      # remain in the upstream repository and are public.
+      LIBXRAY_RELEASE_URL: https://github.com/Bumer55577/aios-vpn/releases/download/libxray/libxray.aar
 
     steps:
       - name: 'Get sources'
@@ -47,7 +49,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "${{ github.workspace }}/Qt"
-          URL="https://github.com/${{ github.repository }}/releases/download/libxray/qt-6.10.1-android-host.tar.zst"
+          URL="https://github.com/Bumer55577/aios-vpn/releases/download/libxray/qt-6.10.1-android-host.tar.zst"
           echo "Downloading Qt 6.10.1 bundle..."
           wget -q --tries=2 "$URL" -O /tmp/qt.tar.zst
           tar -x --zstd -f /tmp/qt.tar.zst -C "${{ github.workspace }}/Qt"
