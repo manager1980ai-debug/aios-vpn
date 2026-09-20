@@ -332,6 +332,7 @@ PageType {
             id: homeTabButton
             text: qsTr("Главная")
             isSelected: tabBar.currentIndex === 0
+            iconName: "home"
             image: "qrc:/images/controls/home.svg"
             clickedFunc: function() {
                 tabBarStackView.goToTabBarPage(PageEnum.PageHome)
@@ -342,6 +343,7 @@ PageType {
         TabImageButtonType {
             text: qsTr("Мой сервер")
             isSelected: tabBar.currentIndex === 1
+            iconName: "server"
             image: "qrc:/images/controls/server.svg"
             clickedFunc: function() {
                 tabBarStackView.goToTabBarPage(PageEnum.PageSettingsServersList)
@@ -351,6 +353,7 @@ PageType {
         TabImageButtonType {
             text: qsTr("Профиль")
             isSelected: tabBar.currentIndex === 2
+            iconName: "monitor"
             image: "qrc:/images/controls/monitor.svg"
             clickedFunc: function() {
                 tabBarStackView.goToTabBarPage(PageEnum.PageSettings)
