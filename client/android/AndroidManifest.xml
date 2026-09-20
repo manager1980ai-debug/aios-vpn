@@ -31,8 +31,8 @@
     <application
         android:name=".AmneziaApplication"
         android:label="AIOS VPN"
-        android:icon="@mipmap/icon"
-        android:roundIcon="@mipmap/icon_round"
+        android:icon="@drawable/aios_launcher"
+        android:roundIcon="@drawable/aios_launcher"
         android:banner="@mipmap/ic_banner"
         android:theme="@style/NoActionBar"
         android:fullBackupContent="@xml/backup_content"
