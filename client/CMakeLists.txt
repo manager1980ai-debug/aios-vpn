@@ -254,13 +254,6 @@ install(TARGETS ${PROJECT}
     COMPONENT AIOSVPN
 )
 
-if(WIN32)
-    # Ask the WiX generator to create an AIOS VPN shortcut on the desktop.
-    # The Start menu shortcut is still provided by CPACK_PACKAGE_EXECUTABLES.
-    set_property(INSTALL "${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:${PROJECT}>"
-        PROPERTY CPACK_DESKTOP_SHORTCUTS "AIOS VPN")
-endif()
-
 if(APPLE)
     set(RUNTIME_DEPS_DIR ${CMAKE_INSTALL_BINDIR}/AIOSVPN.app/Contents/Frameworks)
 else()
