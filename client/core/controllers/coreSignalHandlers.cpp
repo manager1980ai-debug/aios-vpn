@@ -15,6 +15,7 @@
 #include "ui/controllers/connectionUiController.h"
 #include "ui/controllers/settingsUiController.h"
 #include "ui/controllers/serversUiController.h"
+#include "ui/controllers/aiosDevicesController.h"
 #include "ui/controllers/ipSplitTunnelingUiController.h"
 #include "ui/controllers/allowedDnsUiController.h"
 #include "ui/controllers/appSplitTunnelingUiController.h"
@@ -321,6 +322,14 @@ void CoreSignalHandlers::initPrepareConfigHandler()
             m_coreController->m_connectionController->setConnectionState(Vpn::ConnectionState::Disconnected);
             return;
         }
+
+#ifdef Q_OS_WINDOWS
+        // Register the real Windows machine using the access token embedded in
+        // the imported AIOS config.  This request is deliberately best-effort:
+        // an older VPNPan API must not prevent an otherwise valid tunnel from
+        // connecting. Android connection behaviour remains unchanged.
+        m_coreController->m_aiosDevicesController->ensureCurrentDeviceRegistered(serverId);
+#endif
 
         const serverConfigUtils::ConfigType kind = m_coreController->m_serversRepository->serverKind(serverId);
 

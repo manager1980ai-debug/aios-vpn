@@ -11,7 +11,10 @@ class ServersUiController;
 
 // AIOS: управление устройствами подписки через VPNPan API.
 //   GET    https://<host>/api/devices/<token>          -> список устройств
+//   POST   https://<host>/api/devices/<token>          -> регистрация устройства
 //   DELETE https://<host>/api/devices/<token> {"hwid"} -> отвязка устройства
+// Также поддерживается контракт новых панелей /devices?token=... и
+// /devices {token, hwid, deviceName, platform}.
 // Панель без этих эндпоинтов -> supported=false, UI показывает фолбэк
 // (счётчики из профиля, управление в панели VPNPan).
 class AiosDevicesController : public QObject
@@ -37,6 +40,9 @@ public:
 
     // Обновить список устройств (serverId пуст -> сервер по умолчанию)
     Q_INVOKABLE void refresh(const QString &serverId = QString());
+    // Идемпотентно зарегистрировать текущее устройство перед подключением.
+    // Ошибка API не блокирует сам VPN-туннель.
+    Q_INVOKABLE void ensureCurrentDeviceRegistered(const QString &serverId = QString());
     // Отвязать одно устройство
     Q_INVOKABLE void revoke(const QString &hwid);
     // Отвязать несколько (последовательно); ok/fail counts в revokeFinished
@@ -47,18 +53,22 @@ public:
 signals:
     void stateChanged();
     void devicesChanged();
+    void registrationFinished(bool success, const QString &error);
     // includesThisDevice=true среди отвязанных был HWID этого устройства
     void revokeFinished(int okCount, int failCount, bool includesThisDevice, const QString &lastError);
-
-private slots:
-    void onListReply(QNetworkReply *reply, const QString &token);
-    void onRevokeReply(QNetworkReply *reply, const QString &hwid);
 
 private:
     QString tokenFor(const QString &serverId) const;
     QString hostFor(const QString &serverId) const;
-    void fetchList(const QString &hostName, const QString &token);
-    void revokeNext();
+    void fetchList(const QString &hostName, const QString &token, bool standardContract = false);
+    void onListReply(QNetworkReply *reply, const QString &hostName, const QString &token,
+                     bool standardContract);
+    void registerCurrentDevice(const QString &hostName, const QString &token,
+                               bool standardContract = false);
+    void onRegisterReply(QNetworkReply *reply, const QString &hostName, const QString &token,
+                         bool standardContract);
+    void revokeNext(bool standardContract = false);
+    void onRevokeReply(QNetworkReply *reply, const QString &hwid, bool standardContract);
     void parseDevices(const QByteArray &body);
 
     QNetworkAccessManager m_nam;
