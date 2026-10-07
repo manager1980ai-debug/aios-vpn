@@ -241,12 +241,33 @@ PageType {
     }
 
     property list<QtObject> variants: [
+        qrImageOpen,
         qrScan,
         fileOpen
     ]
     
 
 
+
+    // Desktop users can import the QR image directly, even without a webcam.
+    QtObject {
+        id: qrImageOpen
+
+        property bool featuredAmneziaConnection: false
+        property string title: qsTr("QR-код из изображения")
+        property string description: qsTr("Выбрать PNG или JPG с ключом доступа")
+        property string imageSource: "qrc:/images/controls/scan-line.svg"
+        property bool isVisible: Qt.platform.os === "windows"
+        property var handler: function() {
+            var nameFilter = qsTr("QR images (*.png *.jpg *.jpeg *.bmp)")
+            var fileName = SystemController.getFileName(qsTr("Открыть QR-код"), nameFilter)
+            if (fileName !== "") {
+                if (ImportController.extractConfigFromQrImage(fileName)) {
+                    PageController.goToPage(PageEnum.PageSetupWizardViewConfig)
+                }
+            }
+        }
+    }
 
     QtObject {
         id: fileOpen
