@@ -190,6 +190,26 @@ if(WIN32)
         gdi32
     )
 
+    # Decode QR images on Windows without requiring a webcam.
+    # This is a separate dependency; the VPN tunnel implementation is unchanged.
+    find_package(ZXing CONFIG QUIET)
+    if(NOT TARGET ZXing::ZXing)
+        include(FetchContent)
+        set(ZXING_READERS ON CACHE BOOL "" FORCE)
+        set(ZXING_WRITERS OFF CACHE STRING "" FORCE)
+        set(ZXING_C_API OFF CACHE BOOL "" FORCE)
+        set(ZXING_EXAMPLES OFF CACHE BOOL "" FORCE)
+        set(ZXING_EXAMPLES_QT OFF CACHE BOOL "" FORCE)
+        set(ZXING_BLACKBOX_TESTS OFF CACHE BOOL "" FORCE)
+        set(ZXING_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+        FetchContent_Declare(aios_zxing
+            GIT_REPOSITORY https://github.com/zxing-cpp/zxing-cpp.git
+            GIT_TAG v2.3.0
+            GIT_SHALLOW TRUE
+        )
+        FetchContent_MakeAvailable(aios_zxing)
+    endif()
+    list(APPEND LIBS ZXing::ZXing)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif()
 
