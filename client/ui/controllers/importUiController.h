@@ -21,6 +21,9 @@ public slots:
     void importConfig();
     void clearConfigFileName();
     bool extractConfigFromFile(const QString &fileName);
+#ifdef Q_OS_WIN
+    bool extractConfigFromQrImage(const QString &fileName);
+#endif
     bool extractConfigFromData(QString data);
     bool extractConfigFromQr(const QByteArray &data);
     QString getConfig();
