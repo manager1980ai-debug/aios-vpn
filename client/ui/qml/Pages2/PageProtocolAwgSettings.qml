@@ -11,6 +11,7 @@ import ProtocolEnum 1.0
 import Style 1.0
 
 import "./"
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Controls2/TextTypes"
 import "../Config"
@@ -65,7 +66,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                headerText: qsTr("AWG settings")
+                headerText: AiosBranding.label(qsTr("AWG settings"))
             }
 
             TextFieldWithHeaderType {
