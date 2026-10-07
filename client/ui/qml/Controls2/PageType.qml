@@ -8,6 +8,15 @@ Item {
     id: root
 
     property StackView stackView: StackView.view
+
+    // Keep the underlying stack page from showing through menus.
+    clip: true
+
+    Rectangle {
+        anchors.fill: parent
+        color: "#060B0E"
+        z: -1
+    }
     property bool enableTimer: true
 
     onVisibleChanged: {
