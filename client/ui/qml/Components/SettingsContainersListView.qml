@@ -7,6 +7,7 @@ import SortFilterProxyModel 0.2
 import PageEnum 1.0
 import Style 1.0
 
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Controls2/TextTypes"
 
@@ -24,8 +25,8 @@ ListViewType {
         LabelWithButtonType {
             Layout.fillWidth: true
 
-            text: name
-            descriptionText: description
+            text: AiosBranding.protocol(name)
+            descriptionText: AiosBranding.protocolDescription(name, description)
             rightWarningImageSource: isOutdatedAwgContainer ? "qrc:/images/controls/alert-circle.svg" : ""
             rightImageSource: isInstalled ? "qrc:/images/controls/chevron-right.svg" : "qrc:/images/controls/download.svg"
 
