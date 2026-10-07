@@ -5,6 +5,12 @@
 #include <QFileInfo>
 #include <QMutex>
 #include <QJsonDocument>
+#ifdef Q_OS_WIN
+#include <QImage>
+#include <QImageReader>
+#include <ZXing/ReadBarcode.h>
+#include <ZXing/ImageView.h>
+#endif
 
 #include "systemController.h"
 
@@ -61,6 +67,55 @@ bool ImportUiController::extractConfigFromFile(const QString &fileName)
     emit importConfigChanged();
     return true;
 }
+
+#ifdef Q_OS_WIN
+bool ImportUiController::extractConfigFromQrImage(const QString &fileName)
+{
+    // Never run decoded VPN text through a shell or write secrets to the log.
+    const QFileInfo info(fileName);
+    if (!info.isFile() || info.size() > 16 * 1024 * 1024) {
+        emit importErrorOccurred(ErrorCode::ImportOpenConfigError, false);
+        return false;
+    }
+
+    QImageReader reader(fileName);
+    const QSize imageSize = reader.size();
+    if (imageSize.isValid() &&
+        (imageSize.width() > 4096 || imageSize.height() > 4096)) {
+        emit importErrorOccurred(ErrorCode::ImportInvalidConfigError, false);
+        return false;
+    }
+
+    QImage image = reader.read();
+    if (image.isNull() || image.width() > 4096 || image.height() > 4096) {
+        emit importErrorOccurred(ErrorCode::ImportInvalidConfigError, false);
+        return false;
+    }
+
+    image = image.convertToFormat(QImage::Format_Grayscale8);
+    const ZXing::ImageView view(image.constBits(), image.width(), image.height(),
+                                ZXing::ImageFormat::Lum, image.bytesPerLine());
+    const auto options = ZXing::ReaderOptions()
+                             .setFormats(ZXing::BarcodeFormat::QRCode)
+                             .setTryHarder(true);
+    const auto barcode = ZXing::ReadBarcode(view, options);
+    if (!barcode.isValid()) {
+        emit importErrorOccurred(ErrorCode::ImportInvalidConfigError, false);
+        return false;
+    }
+
+    const auto content = barcode.text();
+    if (content.empty() || content.size() > 128 * 1024) {
+        emit importErrorOccurred(ErrorCode::ImportInvalidConfigError, false);
+        return false;
+    }
+
+    // The ordinary importer recognizes full [Interface]/[Peer] AWG configs
+    // and the app's existing compressed subscription/link format.
+    return extractConfigFromData(QString::fromUtf8(content.data(),
+                                                   static_cast<qsizetype>(content.size())));
+}
+#endif
 
 bool ImportUiController::extractConfigFromData(QString data)
 {
