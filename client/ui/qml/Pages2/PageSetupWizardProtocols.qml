@@ -8,6 +8,7 @@ import PageEnum 1.0
 import Style 1.0
 
 import "./"
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Config"
 
@@ -91,8 +92,8 @@ PageType {
             LabelWithButtonType {
                 Layout.fillWidth: true
 
-                text: name
-                descriptionText: description
+                text: AiosBranding.protocol(name)
+                descriptionText: AiosBranding.protocolDescription(name, description)
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function () {
