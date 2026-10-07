@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Shapes
+import PageEnum 1.0
 import Qt5Compat.GraphicalEffects
 Button {
  id: root
@@ -39,7 +40,14 @@ Button {
   }
  }
  Connections { target: ConnectionController; function onPreparingConfig() { PageController.showNotificationMessage(qsTr("Подготавливаем подключение…")) } }
- onClicked: ConnectionController.connectButtonClicked()
+ onClicked: {
+  if (ServersUiController.defaultServerId === "") {
+   PageController.showNotificationMessage(qsTr("Сначала импортируйте ключ подключения"))
+   PageController.goToPage(PageEnum.PageSetupWizardConfigSource)
+   return
+  }
+  ConnectionController.connectButtonClicked()
+ }
  Keys.onReturnPressed: clicked()
  Keys.onEnterPressed: clicked()
 }
