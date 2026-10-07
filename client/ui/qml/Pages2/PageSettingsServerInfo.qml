@@ -167,7 +167,10 @@ PageType {
         StackLayout {
             id: nestedStackView
 
+            // Restrict the nested server pages to the available content area.
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            clip: true
 
             currentIndex: tabBar.currentIndex
 
