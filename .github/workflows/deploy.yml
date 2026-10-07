@@ -1,9 +1,16 @@
 name: 'Deploy workflow'
 
 on:
+  # The full upstream cross-platform matrix is not a release build. Running
+  # it on every master commit floods GitHub-hosted runners and slows MSI/APK CI.
+  workflow_dispatch:
   push:
     branches:
-      - '**'
+      - dev
+
+concurrency:
+  group: aios-full-deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   QT_MIRROR: https://mirrors.ocf.berkeley.edu/qt/ # https://download.qt.io/static/mirrorlist/
