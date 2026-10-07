@@ -9,6 +9,7 @@ import ContainerProps 1.0
 import Style 1.0
 
 import "./"
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Controls2/TextTypes"
 import "../Config"
@@ -53,7 +54,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.bottomMargin: root.isOutdatedAwgContainer ? 16 : 32
 
-                headerText: ContainersModel.getProcessedContainerName() + qsTr(" settings")
+                headerText: AiosBranding.protocol(ContainersModel.getProcessedContainerName()) + qsTr(" settings")
                 descriptionText: root.isUnsupportedContainer ? qsTr("This protocol is no longer supported.") : ""
             }
 
@@ -68,7 +69,7 @@ PageType {
                 iconPath: "qrc:/images/controls/alert-circle.svg"
                 imageColor: AmneziaStyle.color.goldenApricot
                 textColor: AmneziaStyle.color.goldenApricot
-                textString: qsTr("AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Moving to AWG 3.1 by deploying a new container on the server is recommended for stronger protocol security")
+                textString: qsTr("This connection uses outdated security settings. Update the server configuration for stronger protection.")
             }
         }
 
@@ -87,7 +88,7 @@ PageType {
 
                 Layout.fillWidth: true
 
-                text: protocolName + qsTr(" connection settings")
+                text: AiosBranding.protocol(protocolName) + qsTr(" connection settings")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
                 visible: delegateContent.isClientSettingsVisible
 
@@ -116,7 +117,7 @@ PageType {
 
                 Layout.fillWidth: true
 
-                text: protocolName + qsTr(" server settings")
+                text: AiosBranding.protocol(protocolName) + qsTr(" server settings")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
                 visible: delegateContent.isServerSettingsVisible
 
@@ -151,14 +152,14 @@ PageType {
                 text: qsTr("Clear profile")
 
                 clickedFunction: function() {
-                    var headerText = qsTr("Clear %1 profile?").arg(ContainersModel.getProcessedContainerName())
+                    var headerText = qsTr("Clear %1 profile?").arg(AiosBranding.protocol(ContainersModel.getProcessedContainerName()))
                     var descriptionText = qsTr("The connection configuration will be deleted for this device only")
                     var yesButtonText = qsTr("Continue")
                     var noButtonText = qsTr("Cancel")
 
                     var yesButtonFunction = function() {
                         if (ConnectionController.isConnected && ServersUiController.serverDefaultContainer(ServersUiController.defaultServerId) === ServersUiController.processedContainerIndex) {
-                            var message = qsTr("Unable to clear %1 profile while there is an active connection").arg(ContainersModel.getProcessedContainerName())
+                            var message = qsTr("Unable to clear %1 profile while there is an active connection").arg(AiosBranding.protocol(ContainersModel.getProcessedContainerName()))
                             PageController.showNotificationMessage(message)
                             return
                         }
@@ -196,7 +197,7 @@ PageType {
                 textColor: AmneziaStyle.color.vibrantRed
 
                 clickedFunction: function() {
-                    var headerText = qsTr("Remove %1 from server?").arg(ContainersModel.getProcessedContainerName())
+                    var headerText = qsTr("Remove %1 from server?").arg(AiosBranding.protocol(ContainersModel.getProcessedContainerName()))
                     var descriptionText = qsTr("All users with whom you shared a connection will no longer be able to connect to it.")
                     var yesButtonText = qsTr("Continue")
                     var noButtonText = qsTr("Cancel")
