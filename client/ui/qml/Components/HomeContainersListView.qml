@@ -6,6 +6,7 @@ import SortFilterProxyModel 0.2
 
 import PageEnum 1.0
 
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Controls2/TextTypes"
 
@@ -39,8 +40,8 @@ ListViewType {
 
                 Layout.fillWidth: true
 
-                text: name
-                descriptionText: description
+                text: AiosBranding.protocol(name)
+                descriptionText: AiosBranding.protocolDescription(name, description)
 
                 ButtonGroup.group: containersRadioButtonGroup
 
