@@ -10,6 +10,7 @@ import ProtocolProps 1.0
 import Style 1.0
 
 import "./"
+import "../Config/AiosBranding.js" as AiosBranding
 import "../Controls2"
 import "../Controls2/TextTypes"
 import "../Config"
@@ -66,12 +67,13 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.leftMargin: 16
 
-                headerText: qsTr("Installing %1").arg(name)
-                descriptionText: description
+                headerText: qsTr("Installing %1").arg(AiosBranding.protocol(name))
+                descriptionText: AiosBranding.protocolDescription(name, description)
             }
 
             BasicButtonType {
                 id: showDetailsButton
+                visible: !AiosBranding.isAiosProtocol(name)
 
                 Layout.topMargin: 16
                 Layout.rightMargin: 16
@@ -133,7 +135,7 @@ PageType {
                                 Layout.rightMargin: 16
                                 Layout.leftMargin: 16
 
-                                headerText: name
+                                headerText: AiosBranding.protocol(name)
                             }
                         }
 
@@ -149,7 +151,7 @@ PageType {
                                 Layout.leftMargin: 16
                                 Layout.rightMargin: 16
 
-                                text: detailedDescription
+                                text: AiosBranding.protocolDescription(name, detailedDescription)
                                 textFormat: Text.MarkdownText
                             }
 
