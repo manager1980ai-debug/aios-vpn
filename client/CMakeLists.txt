@@ -210,6 +210,14 @@ if(WIN32)
         FetchContent_MakeAvailable(aios_zxing)
     endif()
     list(APPEND LIBS ZXing::ZXing)
+
+    # Retain the QR decoder's Apache-2.0 license in the installed product.
+    if(EXISTS "${aios_zxing_SOURCE_DIR}/LICENSE")
+        install(FILES "${aios_zxing_SOURCE_DIR}/LICENSE"
+            DESTINATION "."
+            RENAME "ZXing-LICENSE.txt"
+            COMPONENT AIOSVPN)
+    endif()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif()
 
