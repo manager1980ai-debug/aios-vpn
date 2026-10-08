@@ -8,8 +8,14 @@
 #ifdef Q_OS_WIN
 #include <QImage>
 #include <QImageReader>
+// Installed ZXing uses include/ZXing; FetchContent uses core/src directly.
+#if __has_include(<ZXing/ReadBarcode.h>)
 #include <ZXing/ReadBarcode.h>
 #include <ZXing/ImageView.h>
+#else
+#include <ReadBarcode.h>
+#include <ImageView.h>
+#endif
 #endif
 
 #include "systemController.h"
