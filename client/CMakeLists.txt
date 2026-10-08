@@ -208,6 +208,13 @@ if(WIN32)
             GIT_SHALLOW TRUE
         )
         FetchContent_MakeAvailable(aios_zxing)
+
+        # Windows resolves Version.h and version.h as the same file.
+        # AIOS also generates its own version.h, so without the explicit
+        # first include path ZXingCpp.cpp can pick AIOS's header instead
+        # of ZXing's generated Version.h (missing ZXING_VERSION_STR).
+        target_include_directories(ZXing BEFORE PRIVATE
+            "${aios_zxing_BINARY_DIR}/core")
     endif()
     list(APPEND LIBS ZXing::ZXing)
 
